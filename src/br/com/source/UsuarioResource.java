@@ -1,5 +1,8 @@
 package br.com.source;
 
-public class UsuarioResource {
+import javax.ws.rs.Path;
 
+@Path("/usuario")
+public class UsuarioResource {
+	
 }
