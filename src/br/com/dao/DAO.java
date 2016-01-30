@@ -1,10 +1,14 @@
 package br.com.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import br.com.util.FabricaConexao;
+import br.com.util.PersistenceJPA;
 
 public class DAO<T> {
 	protected String persistenceName;
@@ -12,16 +16,13 @@ public class DAO<T> {
 	protected EntityManager em;
 	private final Class classe;
 	
-	public DAO(String persistenceName, Class classe) {
-		this.persistenceName = persistenceName;
+	public DAO(Class classe) {
 		this.classe = classe;
 	}
 
 	public EntityManager getEm() throws Exception{
 		try {
-			if(emf == null){
-				emf = Persistence.createEntityManagerFactory(persistenceName);
-			}
+			emf = FabricaConexao.getConexao(PersistenceJPA.servicosJPA.name());
 			if(em == null || !em.isOpen()){
 				em = emf.createEntityManager();
 			}
@@ -32,12 +33,10 @@ public class DAO<T> {
 		return em;
 	}
 	
-	public void fecharConexao(){
+	public void fecharConexao() throws Exception{
 		if(em != null && em.isOpen()){
+//			em.createNamedQuery("shutdown");
 			em.close();
-		}
-		if(emf != null && emf.isOpen()){
-			emf.close();
 		}
 	}
 	
@@ -52,19 +51,31 @@ public class DAO<T> {
 		getEm().merge(entity);
 		getEm().getTransaction().commit();
 	}
-
-	public Object buscar(long id) throws Exception{
+	
+	public T excluir(long id) throws Exception{
 		getEm().getTransaction().begin();
-		T entity =  (T) getEm().find(classe, id);
+		T entity =   (T) getEm().find(classe, id);
+		getEm().remove(entity);
+		getEm().getTransaction().commit();
+		return entity;
+	}
+
+	public T buscar(long id) throws Exception{
+		getEm().getTransaction().begin();
+		T entity =   (T) getEm().find(classe, id);
 		getEm().getTransaction().commit();
 		return entity;
 	}
 	
-	public ArrayList<T> listar() throws Exception{
+	public List<T> listar() throws Exception{
 		getEm().getTransaction().begin();
-		ArrayList<T> lista =  (ArrayList<T>) getEm().createQuery("select o from " + classe.getSimpleName() + " o").getResultList();
+		List<T> lista =  (ArrayList<T>) getEm().createQuery("select o from " + classe.getSimpleName() + " o").getResultList();
 		getEm().getTransaction().commit();
 		return lista;
+	}
+	
+	public String testeRetorno(){
+		return "Teste retorno";
 	}
 	
 	

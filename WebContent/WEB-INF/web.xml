@@ -14,7 +14,7 @@
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>com.k19.restful.resources</param-value>
+			<param-value>br.com.resource</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

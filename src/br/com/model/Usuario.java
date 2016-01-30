@@ -1,5 +1,7 @@
 package br.com.model;
 
+
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,9 +15,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
 @Entity
 @Table(name="usuario")
+@XmlRootElement
 public class Usuario implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
